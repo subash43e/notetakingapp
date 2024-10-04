@@ -1,17 +1,23 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import PropTypes from 'prop-types';
 
 const NoteItem = ({ note, index, moveNote, editNote, deleteNote }) => {
-  const [, drag] = useDrag({
+  const [{ isDragging }, drag] = useDrag({
     type: 'NOTE',
     item: { id: note.id, index },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
   });
 
   const [, drop] = useDrop({
     accept: 'NOTE',
-    hover: (draggedItem) => {
+    hover: (draggedItem, monitor) => {
+      if (!monitor.isOver({ shallow: true })) {
+        return;
+      }
       if (draggedItem.index !== index) {
         moveNote(draggedItem.index, index);
         draggedItem.index = index;
@@ -20,7 +26,10 @@ const NoteItem = ({ note, index, moveNote, editNote, deleteNote }) => {
   });
 
   return (
-    <div ref={(node) => drag(drop(node))} className="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1">
+    <div 
+      ref={(node) => drag(drop(node))} 
+      className={`bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1 ${isDragging ? 'opacity-50' : ''}`}
+    >
       <div className="bg-blue-100 px-4 py-2 flex justify-between items-center">
         <h3 className="text-lg font-semibold text-blue-800">{note.title}</h3>
         <div>
@@ -111,13 +120,15 @@ const Container = () => {
     }
   };
 
-  const moveNote = (fromIndex, toIndex) => {
-    const updatedNotes = [...notes];
-    const [movedNote] = updatedNotes.splice(fromIndex, 1);
-    updatedNotes.splice(toIndex, 0, movedNote);
-    setNotes(updatedNotes);
-    saveNotesToLocalStorage(updatedNotes);
-  };
+  const moveNote = useCallback((fromIndex, toIndex) => {
+    setNotes((prevNotes) => {
+      const updatedNotes = [...prevNotes];
+      const [movedNote] = updatedNotes.splice(fromIndex, 1);
+      updatedNotes.splice(toIndex, 0, movedNote);
+      saveNotesToLocalStorage(updatedNotes);
+      return updatedNotes;
+    });
+  }, []);
 
   return (
     <DndProvider backend={HTML5Backend}>
