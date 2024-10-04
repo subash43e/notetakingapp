@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import PropTypes from 'prop-types';
 
-const Topbar = () => {
+const Topbar = ({ onAddNote, onSearch }) => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [storageType, setStorageType] = useState("local"); // 'local' or 'cloud'
-  const [isGridLayout, setIsGridLayout] = useState(true); // Add this line
+  const [storageType, setStorageType] = useState("local");
+  const [isGridLayout, setIsGridLayout] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const toggleSettings = () => {
     setIsSettingsOpen(!isSettingsOpen);
@@ -14,12 +16,10 @@ const Topbar = () => {
   };
 
   const handleLogout = () => {
-    // Implement logout functionality
     console.log("Logging out...");
   };
 
   const handleDeleteAccount = () => {
-    // Implement delete account functionality
     console.log("Deleting account...");
   };
 
@@ -27,21 +27,54 @@ const Topbar = () => {
     setIsGridLayout(!isGridLayout);
   };
 
+  // Add this useEffect to trigger search as user types
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      onSearch(searchTerm);
+    }, 300) // 300ms delay
+
+    return () => clearTimeout(delayDebounceFn)
+  }, [searchTerm, onSearch])
+
   return (
     <header className="bg-gray-800 text-white px-4 py-2 relative">
       <div className="container mx-auto flex justify-between items-center">
         <div className="text-xl font-bold">Note taking</div>
         <div className="flex-1 flex justify-center items-center">
-          <form className="mr-4 w-1/3">
+          <div className="mr-4 w-1/3">
             <input
               type="text"
               placeholder="Search..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full px-3 py-2 rounded bg-black text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-          </form>
+          </div>
         </div>
         <nav>
           <ul className="flex space-x-4 items-center">
+            <li>
+              <button
+                onClick={onAddNote}
+                className="hover:text-gray-300 focus:outline-none"
+                title="Add Note"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 4v16m8-8H4"
+                  />
+                </svg>
+              </button>
+            </li>
             <li>
               <button onClick={toggleSettings} className="hover:text-gray-300">
                 <svg
@@ -119,7 +152,6 @@ const Topbar = () => {
                 </svg>
               </button>
             </li>
-            {/* Other icons... */}
           </ul>
         </nav>
       </div>
@@ -161,6 +193,11 @@ const Topbar = () => {
       )}
     </header>
   );
+};
+
+Topbar.propTypes = {
+  onAddNote: PropTypes.func.isRequired,
+  onSearch: PropTypes.func.isRequired,
 };
 
 export default Topbar;

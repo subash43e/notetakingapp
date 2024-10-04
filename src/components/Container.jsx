@@ -66,20 +66,19 @@ NoteItem.propTypes = {
   deleteNote: PropTypes.func.isRequired,
 };
 
-const Container = () => {
+const Container = ({ isAddingNote, setIsAddingNote, searchTerm }) => {
   const [notes, setNotes] = useState([]);
   const [editingNote, setEditingNote] = useState(null);
   const [isCreatingNewNote, setIsCreatingNewNote] = useState(false);
 
   useEffect(() => {
-    // Load notes from localStorage on component mount
     const savedNotes = JSON.parse(localStorage.getItem('notes')) || [];
     setNotes(savedNotes);
   }, []);
 
-  const saveNotesToLocalStorage = (updatedNotes) => {
+  const saveNotesToLocalStorage = useCallback((updatedNotes) => {
     localStorage.setItem('notes', JSON.stringify(updatedNotes));
-  };
+  }, []);
 
   const addNote = () => {
     const newNote = {
@@ -128,27 +127,35 @@ const Container = () => {
       saveNotesToLocalStorage(updatedNotes);
       return updatedNotes;
     });
-  }, []);
+  }, [saveNotesToLocalStorage]);
+
+  useEffect(() => {
+    if (isAddingNote) {
+      addNote();
+      setIsAddingNote(false);
+    }
+  }, [isAddingNote]);
+
+  const filteredNotes = notes.filter(note => 
+    note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    note.content.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="container mx-auto mt-8 px-4">
-        <div className="flex justify-between items-center mb-8">
+        <div className="mb-8">
           <h2 className="text-3xl font-bold text-gray-800">My Notes</h2>
-          <button
-            onClick={addNote}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-          >
-            Add Note
-          </button>
         </div>
-        {notes.length === 0 ? (
+        {filteredNotes.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-xl text-gray-600">You don&apos;t have any notes yet. Click &quot;Add Note&quot; to get started!</p>
+            <p className="text-xl text-gray-600">
+              {searchTerm ? "No notes match your search." : "You don't have any notes yet. Click 'Add Note' in the top bar to get started!"}
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {notes.map((note, index) => (
+            {filteredNotes.map((note, index) => (
               <NoteItem
                 key={note.id}
                 note={note}
@@ -202,6 +209,12 @@ const Container = () => {
       </div>
     </DndProvider>
   );
+};
+
+Container.propTypes = {
+  isAddingNote: PropTypes.bool.isRequired,
+  setIsAddingNote: PropTypes.func.isRequired,
+  searchTerm: PropTypes.string.isRequired,
 };
 
 export default Container;
