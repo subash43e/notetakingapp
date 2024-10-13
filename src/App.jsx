@@ -1,11 +1,16 @@
+import Searchbar from "../components/searchbar"
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
+      <main className="">
+        {/* Searchbar */}
+        <Searchbar/>
+      </main>
     </>
   )
 }
 
 export default App
+
+
