@@ -1,16 +1,21 @@
 import Topbar from "./components/Topbar.jsx";
 import NoteForm from "./components/NoteForm.jsx";
-import { useState } from "react";
-import MyEditor from "./components/Editor.jsx";
+import { useState, createContext } from "react";
 
 function App() {
-  const [isNoteCreate, setNoteCreate] = useState(false);
+  const [isNoteIconClicked, SetIsNoteCreateIconClicked] = useState(false);
+
+  const [useSavingNote, SetIsSavingNote] = useState("");
+
   return (
     <>
       <main className="">
         {/* Searchbar */}
-        <Topbar isOnClick={setNoteCreate} />
-        {isNoteCreate ? <NoteForm isOnClick={setNoteCreate} /> : null}
+        <Topbar isOnClick={SetIsNoteCreateIconClicked} />
+        {isNoteIconClicked ? (
+          <NoteForm goBack={SetIsNoteCreateIconClicked} />
+        ) : null}
+        {/*Passsing SetIsnoteIconClicked to the props of Note form purpose is Just setting false to the SetIsnoteIconClicked*/}
       </main>
     </>
   );

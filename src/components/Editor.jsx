@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import Quill from "quill";
 import "quill/dist/quill.snow.css"; // Import Quill's CSS
 
-export default function Editor({ saveData, watchData }) {
+export default function Editor() {
   const quillRef = useRef(null); // Create a ref to hold the editor DOM element
   const editorContainerRef = useRef(null); // Ref for the container to initialize Quill in
 
@@ -29,10 +29,7 @@ export default function Editor({ saveData, watchData }) {
       <div
         ref={editorContainerRef}
         id="editor"
-        value={watchData}
-        onChange={(e) => saveData(e.target.value)}
-        className="w-full p-2 pl-10 text-sm text-gray-700 h-40 mb-5"
-        placeholder="Enter content"
+        className="w-full p-2 text-sm text-gray-700 h-40 mb-5"
       />
     </>
   );

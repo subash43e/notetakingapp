@@ -1,14 +1,9 @@
-import { useState } from "react";
 import Editor from "./Editor";
 
-const NoteForm = ({ isOnClick }) => {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-
+const NoteForm = ({ goBack }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Add note creation logic here
-    console.log("Note created:", { title, content });
   };
 
   return (
@@ -22,15 +17,13 @@ const NoteForm = ({ isOnClick }) => {
           <input
             type="text"
             id="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
             className="w-full p-2 pl-10 text-sm text-gray-700"
             placeholder="Enter title"
           />
           <label htmlFor="content" className="block mb-2">
             Content
           </label>
-          <Editor saveData={setContent} watchData={content} />
+          <Editor />
           <div className="flex justify-between">
             <button
               type="submit"
@@ -41,7 +34,7 @@ const NoteForm = ({ isOnClick }) => {
 
             <button
               className="bg-red-600 text-white p-2 rounded-lg "
-              onClick={() => isOnClick((prev) => !prev)}
+              onClick={() => goBack((prev) => !prev)}
             >
               Close
             </button>
