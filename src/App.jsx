@@ -1,6 +1,8 @@
 import Topbar from "./components/Topbar.jsx";
 import NoteForm from "./components/NoteForm.jsx";
 import { useState } from "react";
+import MyEditor from "./components/Editor.jsx";
+
 function App() {
   const [isNoteCreate, setNoteCreate] = useState(false);
   return (

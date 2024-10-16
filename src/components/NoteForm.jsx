@@ -48,8 +48,7 @@ const NoteForm = ({ isOnClick }) => {
               className="bg-red-600 text-white p-2 rounded-lg "
               onClick={() => isOnClick((prev) => !prev)}
             >
-              {" "}
-              Close{" "}
+              Close
             </button>
           </div>
         </form>
