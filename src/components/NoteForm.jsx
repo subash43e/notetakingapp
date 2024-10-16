@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Editor from "./Editor";
 
 const NoteForm = ({ isOnClick }) => {
   const [title, setTitle] = useState("");
@@ -29,13 +30,7 @@ const NoteForm = ({ isOnClick }) => {
           <label htmlFor="content" className="block mb-2">
             Content
           </label>
-          <textarea
-            id="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            className="w-full p-2 pl-10 text-sm text-gray-700 h-40 mb-5"
-            placeholder="Enter content"
-          />
+          <Editor saveData={setContent} watchData={content} />
           <div className="flex justify-between">
             <button
               type="submit"
