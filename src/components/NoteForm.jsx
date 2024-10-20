@@ -1,9 +1,25 @@
 import Editor from "./Editor";
+import { useNotes } from "../NoteContext";
+import { useRef, useState } from "react";
+
 
 const NoteForm = ({ goBack }) => {
+
+  const titleRef = useRef();
+  const [content, setContent] = useState();
+  const { addNote, Notes } = useNotes();
+
+
   const handleSubmit = (e) => {
+    const title = titleRef.current.value;
     e.preventDefault();
-    // Add note creation logic here
+    if (titleRef.current && content) {
+      addNote({ id: Date.now(), title: title, content: content });
+      titleRef.current.value = '';
+      setContent('');
+      goBack((prev) => !prev);
+    }
+    console.log("title ", title, "\n content ", content)
   };
 
   return (
@@ -16,6 +32,7 @@ const NoteForm = ({ goBack }) => {
           </label>
           <input
             type="text"
+            ref={titleRef}
             id="title"
             className="w-full p-2 pl-10 text-sm text-gray-700"
             placeholder="Enter title"
@@ -23,7 +40,7 @@ const NoteForm = ({ goBack }) => {
           <label htmlFor="content" className="block mb-2">
             Content
           </label>
-          <Editor />
+          <Editor setContent={setContent} />
           <div className="flex justify-between">
             <button
               type="submit"

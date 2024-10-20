@@ -3,46 +3,46 @@ import {
   createContext,
   useEffect,
   useContext,
-  Children,
+
 } from "react";
 
 const NoteContext = createContext();
 
-export const NoteProvider = () => {
-  const [useNotes, SetNotes] = useState([]);
+export const NoteProvider = ({ children }) => {
+  const [Notes, SetNotes] = useState([]);
 
   useEffect(() => {
     const savedNotes = JSON.parse(localStorage.getItem("notes")) || [];
     SetNotes(savedNotes);
   }, []);
 
-  const savedNotes = (updatedNotes) => {
-    SetNotes(updatedNotes);
-    localStorage.setItem("notes", JSON.stringify(useNotes));
+  const savingNotes = (updatingNotes) => {
+    SetNotes(updatingNotes);
+    localStorage.setItem("notes", JSON.stringify(Notes));
   };
 
   const addNote = (newNote) => {
-    const updatedNotes = [...useNotes, newNote];
-    savedNotes(updatedNotes);
+    const updatedNotes = [...Notes, newNote];
+    savingNotes(updatedNotes);
   };
 
   const editNote = (id, updatedNote) => {
-    const updatedNotes = useNotes.map((note) =>
+    const updatedNotes = Notes.map((note) =>
       note.id === id ? { ...note, ...updatedNote } : note,
     );
-    savedNotes(updatedNotes);
+    savingNotes(updatedNotes);
   };
 
   const deleteNote = (id) => {
-    const updatedNotes = useNotes.filter((note) => note.id !== id);
-    savedNotes(updatedNotes);
+    const updatedNotes = Notes.filter((note) => note.id !== id);
+    savingNotes(updatedNotes);
   };
 
   return (
-    <NoteContext.Provider value={{ useNotes, addNote, editNote, deleteNote }}>
-      {Children}
+    <NoteContext.Provider value={{ Notes, addNote, editNote, deleteNote }}>
+      {children}
     </NoteContext.Provider>
   );
 };
 
-export const NotesUsing = () => useContext(NoteContext);
+export const useNotes = () => useContext(NoteContext);
