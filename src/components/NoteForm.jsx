@@ -7,8 +7,7 @@ const NoteForm = ({ goBack }) => {
 
   const titleRef = useRef();
   const [content, setContent] = useState();
-  const { addNote, Notes } = useNotes();
-
+  const { addNote } = useNotes();
 
   const handleSubmit = (e) => {
     const title = titleRef.current.value;
@@ -19,7 +18,6 @@ const NoteForm = ({ goBack }) => {
       setContent('');
       goBack((prev) => !prev);
     }
-    console.log("title ", title, "\n content ", content)
   };
 
   return (
