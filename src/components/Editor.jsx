@@ -18,8 +18,9 @@ function Editor({ setContent }) {
 
 
     quillRef.current.on('text-change', () => {
-      setContent(quillRef.current.root.innerHTML);
-      // console.log(quillRef.current.getContents());
+      // setContent(quillRef.current.root.innerHTML);
+      setContent(quillRef.current.getContents().ops);
+      console.log(quillRef.current.getContents().ops);
       // setContent(quillRef.current.getContents());
     });
   }, []);

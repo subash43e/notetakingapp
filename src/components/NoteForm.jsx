@@ -11,14 +11,12 @@ const NoteForm = ({ goBack }) => {
     e.preventDefault();
     const title = titleRef.current.value;
 
-    if (title !== "" && content !== "") {
-      addNote({ id: Date.now(), title, content });
-      titleRef.current.value = "";
-      setContent("");
-      goBack((prev) => !prev);
-    } else {
-      alert("Title and Content cannot be empty!");
-    }
+    console.log(content);
+    
+    addNote({ id: Date.now(), title, content });
+    titleRef.current.value = "";
+    setContent("");
+    goBack((prev) => !prev);
   };
 
   return (
