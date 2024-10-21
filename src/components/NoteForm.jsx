@@ -2,56 +2,74 @@ import Editor from "./Editor";
 import { useNotes } from "../NoteContext";
 import { useRef, useState } from "react";
 
-
 const NoteForm = ({ goBack }) => {
-
   const titleRef = useRef();
-  const [content, setContent] = useState();
+  const [content, setContent] = useState("");
   const { addNote } = useNotes();
 
   const handleSubmit = (e) => {
-    const title = titleRef.current.value;
     e.preventDefault();
-    if (titleRef.current && content) {
-      addNote({ id: Date.now(), title: title, content: content });
-      titleRef.current.value = '';
-      setContent('');
+    const title = titleRef.current.value;
+
+    if (title !== "" && content !== "") {
+      addNote({ id: Date.now(), title, content });
+      titleRef.current.value = "";
+      setContent("");
       goBack((prev) => !prev);
+    } else {
+      alert("Title and Content cannot be empty!");
     }
   };
 
   return (
-    <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center backdrop-blur-lg bg-gray-500 opacity-90">
-      <div className="w-full max-w-lg p-4 bg-white rounded">
-        <h2 className="text-2xl font-bold mb-4">Create a Note</h2>
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="title" className="block mb-2">
-            Title
-          </label>
-          <input
-            type="text"
-            ref={titleRef}
-            id="title"
-            className="w-full p-2 pl-10 text-sm text-gray-700"
-            placeholder="Enter title"
-          />
-          <label htmlFor="content" className="block mb-2">
-            Content
-          </label>
-          <Editor setContent={setContent} />
-          <div className="flex justify-between">
+    <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-gray-500 bg-opacity-90 backdrop-blur-sm">
+      <div className="w-full max-w-[1100px] p-8 bg-white rounded-lg shadow-md"> {/* Increased max-width and padding */}
+        <h2 className="text-3xl font-bold text-gray-800 mb-6">
+          {/* Increased title size and margin bottom */}
+          Create a Note
+        </h2>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Increased space between form elements */}
+          <div>
+            <label
+              htmlFor="title"
+              className="block text-gray-700 font-bold mb-2"
+            >
+              Title
+            </label>
+            <input
+              type="text"
+              ref={titleRef}
+              id="title"
+              className="w-full p-4 text-lg border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-orange-500 focus:ring-opacity-50"
+              placeholder="Enter title"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="content"
+              className="block text-gray-700 font-bold mb-2"
+            >
+              Content
+            </label>
+            <Editor setContent={setContent} />
+          </div>
+
+          <div className="flex items-center justify-between">
             <button
               type="submit"
-              className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
+              className="px-8 py-3 text-lg bg-orange-500 text-white font-bold rounded-md hover:bg-orange-600 focus:outline-none focus:ring focus:ring-orange-300"
             >
               Create Note
             </button>
-
             <button
-              className="bg-red-600 text-white p-2 rounded-lg "
+              type="button"
               onClick={() => goBack((prev) => !prev)}
+              className="px-6 py-3 text-lg text-red-600 font-bold hover:underline"
             >
-              Close
+              Cancel
             </button>
           </div>
         </form>
@@ -61,3 +79,4 @@ const NoteForm = ({ goBack }) => {
 };
 
 export default NoteForm;
+

@@ -18,7 +18,7 @@ export const NoteProvider = ({ children }) => {
 
   const savingNotes = (updatingNotes) => {
     SetNotes(updatingNotes);
-    localStorage.setItem("notes", JSON.stringify(Notes));
+    localStorage.setItem("notes", JSON.stringify(updatingNotes));
   };
 
   const addNote = (newNote) => {

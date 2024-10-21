@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import Quill from "quill";
-import "quill/dist/quill.snow.css"; // Import Quill's CSS
+// Import Quill's CSS
+import "quill/dist/quill.snow.css";
 
 function Editor({ setContent }) {
   const quillRef = useRef(null); // Create a ref to hold the editor DOM element
@@ -8,25 +9,21 @@ function Editor({ setContent }) {
 
   useEffect(() => {
     if (quillRef.current === null) {
-      quillRef.current = new Quill(editorContainerRef.current, {
+      const quill = new Quill(editorContainerRef.current, {
         theme: "snow", // or "bubble"
-        modules: {
-          toolbar: [
-            [{ header: [1, 2, false] }],
-            ["bold", "italic", "underline"],
-            ["link", "image"],
-            [{ list: "ordered" }, { list: "bullet" }],
-          ],
-        },
-        readOnly: false,
       });
-      setContent(quillRef.current.root.innerHTML);
+
+      quillRef.current = quill
     }
+
 
     quillRef.current.on('text-change', () => {
       setContent(quillRef.current.root.innerHTML);
+      // console.log(quillRef.current.getContents());
+      // setContent(quillRef.current.getContents());
     });
   }, []);
+
 
 
   return (
