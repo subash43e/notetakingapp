@@ -3,8 +3,8 @@ import { useEffect, useRef } from "react";
 
 function NoteViewer(props) {
   const DisplayValue = props;
-  const { noteTitle, noteContent } = DisplayValue.displayFullNotes;
-  const { setDisplayFullNotes } = DisplayValue;
+  const { noteTitle, noteContent } = DisplayValue.displayFullNote;
+  const { setDisplayFullNote } = DisplayValue;
 
   const quillRef = useRef(null);
   const editorContainerRef = useRef(null);
@@ -33,7 +33,7 @@ function NoteViewer(props) {
           <button
             className="underline hover:decoration-blue-500 hover:text-blue-700 p-1 rounded-lg mt-5"
             onClick={() =>
-              setDisplayFullNotes((prev) => ({ ...prev, display: false }))
+              setDisplayFullNote((prev) => ({ ...prev, display: false }))
             }
           >
             Close
@@ -51,7 +51,7 @@ function NoteViewer(props) {
         ref={editorContainerRef}
         id="editor"
         className="w-full p-2 text-sm text-gray-700 border border-slate-600 grow overflow-y-auto" 
-      /> 
+      />
     </div>
   );
 }
